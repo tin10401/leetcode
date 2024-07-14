@@ -12,19 +12,24 @@ public:
             return j == m * k;
         };
         string res;
-        queue<string> q;
-        q.push("");
+        array<int, 26> counter;
+        for(auto& ch : s) counter[ch - 'a']++;
+        queue<pair<string, array<int, 26>>> q;
+        q.push({"", {}});
         while(!q.empty())
         {
-            auto curr = q.front();
+            auto [curr, count] = q.front();
             q.pop();
             for(char ch = 'a'; ch <= 'z'; ch++)
             {
+                if(count[ch - 'a'] * k > counter[ch - 'a']) continue;
                 string temp = curr + ch;
                 if(check(temp))
                 {
                     if(temp.size() > res.size() || temp > res) res = temp;
-                    q.push(temp);
+                    array<int, 26> next = count;
+                    next[ch - 'a']--;
+                    q.push({temp, next});
                 }
             }
         }
