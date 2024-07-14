@@ -1,6 +1,10 @@
 class Solution {
 public:
     string longestSubsequenceRepeatedK(string s, int k) {
+        // SOLUTION OF TIN LE
+        ios_base::sync_with_stdio(false);
+        cin.tie(nullptr);
+        cout.tie(nullptr);
         auto check = [&](const string& a)
         {
             int n = s.size(), m = a.size(), i = 0, j = 0;
