@@ -22,7 +22,7 @@ public:
             q.pop();
             for(char ch = 'a'; ch <= 'z'; ch++)
             {
-                if(count[ch - 'a'] * k > counter[ch - 'a']) continue;
+                if((count[ch - 'a'] + 1) * k > counter[ch - 'a']) continue;
                 string temp = curr + ch;
                 if(check(temp))
                 {
