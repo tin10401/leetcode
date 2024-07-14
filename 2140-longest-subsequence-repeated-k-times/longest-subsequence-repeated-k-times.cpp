@@ -1,35 +1,25 @@
 class Solution {
 public:
-    bool check(string &s, string &p, int k) {
-    for (int i = 0, j = 0; i < s.size() && k > 0; ++i) {
-        j += p[j] == s[i];
-        if (j == p.size()) {
-            --k;
-            j = 0;
+    int count_oc(string sub, string s){ //pointers approach
+        if(sub.length() == 0) return s.length(); //dummy case when sub = ""
+        int ind = 0;  //current pointer in sub
+        int cntr = 0; //number of times it appears as substring
+        for(int i = 0; i < s.length(); i++) {
+            if(sub[ind] == s[i]){ //if it matches, then increment our index
+                ind++; 
+                if(ind == (int)sub.length()) ind = 0, cntr++; //reset our pointer
+            } 
         }
+        return cntr;
     }
-    return k == 0;
-}
-void generate(string &s, string &chars, string &cur, string &best, int mask, int k) {
-    for (int i = 0; i < chars.size(); ++i) {
-        if ((mask & (1 << i)) == 0) {
-            string new_cur = cur + chars[i];
-            if (check(s, new_cur, k)) {
-                if (new_cur.size() > best.size())
-                    best = new_cur;
-                generate(s, chars, new_cur, best, mask + (1 << i), k);
-            }
-        }
+    string best; //best string we've seen so far
+    void rec(string sub, string s, int k) {
+        if(count_oc(sub, s) < k) return; //if it doesn't work, appending something still won't make it work
+        if(sub.length() >= best.length() && sub > best) best = sub; //we've found something better!
+        for(char c = 'a'; c <= 'z'; c++) rec(sub + c, s, k); //we can try appending and seeing if it works
     }
-}
-string longestSubsequenceRepeatedK(string &s, int k) {
-    int cnt[26] = {};
-    string chars, best;
-    for (auto ch : s)
-        ++cnt[ch - 'a'];
-    for (int i = 25; i >= 0; --i)
-        chars += string(cnt[i] / k, 'a' + i);
-    generate(s, chars, string() = {}, best, 0, k);
-    return best;
-}
+    string longestSubsequenceRepeatedK(string s, int k) {
+        rec("", s, k);
+        return best;
+    }
 };
