@@ -1,55 +1,35 @@
 class Solution {
 public:
-    string s;
-    int k;
-    unordered_set<char> vis;
-    bool check(const string& b)
-    {
-        int n = s.size(), m = b.size(), i = 0, j = 0;
-        while(i < n && j < m * k)
-        {
-            if(s[i] == b[j % m]) j++;
-            i++;
+    bool check(string &s, string &p, int k) {
+    for (int i = 0, j = 0; i < s.size() && k > 0; ++i) {
+        j += p[j] == s[i];
+        if (j == p.size()) {
+            --k;
+            j = 0;
         }
-        return j == m * k;
     }
-    vector<string> generate()
-    {
-        vector<string> curr;
-        vector<string> temp;
-        while(true)
-        {
-            temp.clear();
-            if(curr.empty())
-            {
-                for(auto& ch : vis)
-                {
-                    string curr;
-                    curr += ch;
-                    if(check(curr)) temp.push_back(curr);
-                }
+    return k == 0;
+}
+void generate(string &s, string &chars, string &cur, string &best, int mask, int k) {
+    for (int i = 0; i < chars.size(); ++i) {
+        if ((mask & (1 << i)) == 0) {
+            string new_cur = cur + chars[i];
+            if (check(s, new_cur, k)) {
+                if (new_cur.size() > best.size())
+                    best = new_cur;
+                generate(s, chars, new_cur, best, mask + (1 << i), k);
             }
-            else
-            {
-                for(auto& str : curr)
-                {
-                    for(auto& ch : vis)
-                    {
-                        string curr = str + ch;
-                        if(check(curr)) temp.push_back(curr);
-                    }
-                }
-            }
-            if(temp.empty() || temp.front().size() * k > s.size()) return curr;
-            curr = temp;
         }
-        return curr;
     }
-    string longestSubsequenceRepeatedK(string s, int k) {
-        vis = {begin(s), end(s)};
-        this->s = s, this->k = k;
-        vector<string> res = generate();
-        sort(rbegin(res), rend(res));
-        return res.empty() ? "" : res.front();
-    }
+}
+string longestSubsequenceRepeatedK(string &s, int k) {
+    int cnt[26] = {};
+    string chars, best;
+    for (auto ch : s)
+        ++cnt[ch - 'a'];
+    for (int i = 25; i >= 0; --i)
+        chars += string(cnt[i] / k, 'a' + i);
+    generate(s, chars, string() = {}, best, 0, k);
+    return best;
+}
 };
