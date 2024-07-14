@@ -1,0 +1,166 @@
+Compiled source files
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+*.obj
+*.out
+*.gch
+
+C++ specific
+*.swp
+*.swo
+
+Debug and Release directories
+[Dd]ebug/
+[Rr]elease/
+
+Dependency directories
+vendor/
+deps/
+
+OS-specific files
+.DSStore
+Thumbs.db
+
+Editor and IDE-specific files
+*.log
+*.idea/
+*.vscode/
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+
+Generated files
+*.d
+*.dep
+*.dSYM/
+
+Binaries
+bin/
+obj/
+*.a
+*.lib
+*.lo
+*.la
+*.lai
+.mod
+
+Build directories
+build/
+cmake-build-/
+
+Logs and databases
+*.log
+*.sql
+*.sqlite
+
+Backup files
+*~
+*.bak
+*.swp
+*.swo
+*.tmp
+*.old
+*.orig
+
+Node.js specific
+nodemodules/
+
+Python specific
+__pycache/
+*.pyc
+*.pyo
+*.pyd
+
+Package files
+*.tar.gz
+*.zip
+*.7z
+*.rar
+
+Custom patterns (add your own below)
+Compiled source files
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+*.obj
+*.out
+*.gch
+
+C++ specific
+*.swp
+*.swo
+
+Debug and Release directories
+[Dd]ebug/
+[Rr]elease/
+
+Dependency directories
+vendor/
+deps/
+
+OS-specific files
+.DSStore
+Thumbs.db
+
+Editor and IDE-specific files
+*.log
+*.idea/
+*.vscode/
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+
+Generated files
+*.d
+*.dep
+*.dSYM/
+
+Binaries
+bin/
+obj/
+*.a
+*.lib
+*.lo
+*.la
+*.lai
+.mod
+
+Build directories
+build/
+cmake-build-/
+
+Logs and databases
+*.log
+*.sql
+*.sqlite
+
+Backup files
+*~
+*.bak
+*.swp
+*.swo
+*.tmp
+*.old
+*.orig
+
+Node.js specific
+nodemodules/
+
+Python specific
+__pycache/
+*.pyc
+*.pyo
+*.pyd
+
+Package files
+*.tar.gz
+*.zip
+*.7z
+*.rar
