@@ -50,7 +50,7 @@ public:
             if(total[i])
             {
                 int curr = masks[i];
-                for(int j = (1 << n) - 1; j >= 0; j--)
+                for(int j = 0; j < (1 << n) - 1; j++)
                 {
                     if((j & curr) == 0)
                     {
