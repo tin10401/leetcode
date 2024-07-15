@@ -1,8 +1,7 @@
-
 class Solution {
 public:
     using ll = long long;
-    int mod = 1e9 + 7;
+    ll mod = 1e9 + 7;
     ll compute(ll base, ll exp)
     {
         ll res = 1;
@@ -16,11 +15,10 @@ public:
     }
     int numberOfGoodSubsets(vector<int>& nums) {
         vector<int> primes = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29};
-        int masks[31];
-        memset(masks, -1, sizeof(masks));
+        vector<int> total(31), masks(31, -1);
         for(int i = 2; i < 31; i++)
         {   
-            int mask = 0, num = i; 
+            int mask = 0, num = i, count = 0; 
             for(int j = 0; j < primes.size(); j++)
             {
                 int p = primes[j];
@@ -32,48 +30,41 @@ public:
                         break;
                     }
                     mask |= (1 << j);
+                    count++;
                 }
             }
             if(mask != -1) masks[i] = mask;
         }
-        
-        vector<int> total(31);
         int ones = 0;
-        for(int num : nums)
+        for(auto& num : nums)
         {
             if(num == 1) ones++;
-            else total[num]++;
+            else if(masks[num] != -1) total[num]++;
         }
-
-        vector<long> dp(1 << primes.size(), 0);
-        dp[0] = 1; // Empty subset
-
-        for(int i = 2; i <= 30; i++)
+        int n = primes.size();
+        ll dp[1 << n] ;
+        memset(dp, 0, sizeof(dp));
+        dp[0] = 1;
+        for(int i = 2; i < 31; i++)
         {
-            if(total[i] > 0 && masks[i] != -1)
+            if(total[i])
             {
-                int currMask = masks[i];
-                for(int j = (1 << primes.size()) - 1; j >= 0; j--)
+                int curr = masks[i];
+                for(int j = (1 << n) - 1; j >= 0; j--)
                 {
-                    if((j & currMask) == 0)
+                    if((j & curr) == 0)
                     {
-                        dp[j | currMask] = (dp[j | currMask] + dp[j] * total[i]) % mod;
+                        dp[j | curr] = (dp[j | curr] + dp[j] * total[i]) % mod;
                     }
                 }
             }
         }
-
-        long res = 0;
-        for(int i = 1; i < (1 << primes.size()); i++)
+        int res = 0;
+        for(int i = 1; i < 1 << n; i++)
         {
             res = (res + dp[i]) % mod;
         }
-
-        // Include subsets containing 1
-        if (ones > 0) {
-            res = (res * compute(2, ones)) % mod;
-        }
-
-        return (int)res;
-    }
+        if(ones) return ((ll)res * compute(2, ones)) % mod; 
+        return res;
+    }   
 };
