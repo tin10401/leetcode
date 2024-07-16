@@ -1,11 +1,11 @@
 class Solution {
 public:
     using ll = long long;
-    ll dp[15][1 << 14 + 1];
+    ll dp[1 << 14 + 1];
     ll dfs(int index, int mask)
     {
         if(mask == 0) return 0;
-        ll& res = dp[0][mask];
+        ll& res = dp[mask];
         if(res != -1) return res;
         res = INT_MAX;
         for(int i = 0; i < nums2.size(); i++)
