@@ -15,8 +15,7 @@ public:
         int pp2 = p2, pp3 = p3;
         while(p1 < pp2 && p2 < pp3 && p3 < n)
         {
-            if((arr[p1] + arr[p2] + arr[p3]) % 3 != 0) return {-1, -1};
-            p1++, p2++, p3++;
+            if((arr[p1++] + arr[p2++] + arr[p3++]) % 3 != 0) return {-1, -1};
         }
         if(p3 == n) return {p1 - 1, p2};
         return {-1, -1};
