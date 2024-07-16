@@ -12,7 +12,6 @@ public:
                 auto right = string_view(s).substr(i + 1, j + 1);
                 if(left == right) vis.insert(left);
             }
-            cout << vis.size() << endl;
         }
         return vis.size();
     }
