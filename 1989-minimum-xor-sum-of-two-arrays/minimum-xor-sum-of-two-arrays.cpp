@@ -5,7 +5,7 @@ public:
     ll dfs(int index, int mask)
     {
         if(mask == 0) return 0;
-        ll& res = dp[index][mask];
+        ll& res = dp[0][mask];
         if(res != -1) return res;
         res = INT_MAX;
         for(int i = 0; i < nums2.size(); i++)
