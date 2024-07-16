@@ -5,7 +5,7 @@ class Trie
     int count;
     Trie() : count(0), children{} {}
 
-    void insert(int num)
+    void update(int num, int val)
     {
         Trie* curr = this;
         for(int i = 31; i >= 0; i--)
@@ -13,18 +13,7 @@ class Trie
             int bits = (num >> i) & 1;
             if(!curr->children[bits]) curr->children[bits] = new Trie();
             curr = curr->children[bits];
-            curr->count++;
-        }
-    }
-
-    void erase(int num)
-    {
-        Trie* curr = this;
-        for(int i = 31; i >= 0; i--)
-        {
-            int bits = (num >> i) & 1;
-            curr = curr->children[bits];
-            curr->count--;
+            curr->count += val;
         }
     }
 
@@ -49,7 +38,7 @@ class Solution {
 public:
     void dfs(int node)
     {
-        trie->insert(node);
+        trie->update(node, 1);
         for(auto& [val, index] : nodes[node])
         {
             res[index] = trie->search(val);
@@ -58,7 +47,7 @@ public:
         {
             dfs(nei);
         }
-        trie->erase(node);
+        trie->update(node, -1);
     }
     vector<vector<int>> graph;
     vector<vector<pair<int, int>>> nodes;
