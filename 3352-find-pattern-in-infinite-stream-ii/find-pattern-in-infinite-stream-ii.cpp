@@ -21,10 +21,7 @@ public:
             if(curr == pattern[j]) j++, curr = stream->next(), i++;
             else if(j == 0) curr = stream->next(), i++;
             else j = prefix[j - 1];
-            if(j == n) 
-            {
-                return i - n;
-            }
+            if(j == n) return i - n;
         }
         return -1;
     }
