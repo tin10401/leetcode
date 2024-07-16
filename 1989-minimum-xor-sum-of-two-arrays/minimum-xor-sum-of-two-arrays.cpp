@@ -4,7 +4,7 @@ public:
     ll dp[15][1 << 14 + 1];
     ll dfs(int index, int mask)
     {
-        if(index == nums1.size()) return 0;
+        if(mask == 0) return 0;
         ll& res = dp[index][mask];
         if(res != -1) return res;
         res = INT_MAX;
