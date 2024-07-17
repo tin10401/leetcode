@@ -1,8 +1,3 @@
-#include <vector>
-#include <algorithm>
-#include <climits>
-using namespace std;
-
 class Solution {
 public:
     int minWastedSpace(vector<int>& packages, vector<vector<int>>& boxes) {
@@ -12,7 +7,6 @@ public:
         int n = packages.size();
         vector<ll> prefix(n + 1);
         for(int i = 1; i <= n; i++) prefix[i] = prefix[i - 1] + packages[i - 1];
-        
         auto compute = [&](vector<int>& box) {
             if(packages.back() > box.back()) return LLONG_MAX;
             ll prev = 0, total = 0;
