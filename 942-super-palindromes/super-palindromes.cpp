@@ -5,8 +5,13 @@ public:
         ll left = stoll(l), right = stoll(r), res = 0;
         auto isValid = [&](ll num)
         {
-            string s = to_string(num);
-            return s == string(rbegin(s), rend(s));
+            ll next = 0, curr = num;
+            while(num)
+            {
+                next = next * 10 + num % 10;
+                num /= 10;
+            }
+            return curr == next;
         };
         auto transform = [&](ll curr, ll num)
         {
