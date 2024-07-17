@@ -1,7 +1,6 @@
 class Solution {
 public:
     int maxBuilding(int n, vector<vector<int>>& r) {
-        if(r.empty()) return n - 1;
         r.insert(end(r), {{1, 0}, {n, n - 1}});
         sort(begin(r), end(r));
         int res = 0;
