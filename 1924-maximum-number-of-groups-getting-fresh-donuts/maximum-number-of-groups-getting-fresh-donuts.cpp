@@ -1,31 +1,36 @@
 class Solution {
 public:
+    int sz;
     map<vector<int>, int> dp;
-int dfs(vector<int>& cnt, int left) {
-    auto it = dp.find(cnt);
-    if (it != end(dp))
-        return it->second;
-    int res = 0, bz = cnt.size();
-    for (auto j = 1; j < bz; ++j) {
-        if (--cnt[j] >= 0)
-            res = max(res, (left == 0) + dfs(cnt, (bz + left - j) % bz));
-        ++cnt[j];
-    }
-    return dp[cnt] = res;
-}
-int maxHappyGroups(int bz, vector<int>& groups) {
-    vector<int> cnt(bz);
-    int res = 0;
-    for (auto group : groups) {
-        if (group % bz == 0)
-            ++res;
-        else if (cnt[bz - group % bz]) {
-            --cnt[bz - group % bz];
-            ++res;
+    int dfs(vector<int>& cnt, int rem)
+    {
+        if(dp.count(cnt)) return dp[cnt];
+        int& res = dp[cnt];
+        for(int i = 1; i < sz; i++)
+        {
+            if(--cnt[i] >= 0)
+            {
+                int newRem = (rem + i) % sz;
+                res = max(res, (rem == 0) + dfs(cnt, newRem));
+            }
+            ++cnt[i];
         }
-        else 
-            ++cnt[group % bz];
+        return res;
     }
-    return dfs(cnt, 0) + res;
-}
+    int maxHappyGroups(int sz, vector<int>& groups) {
+        this->sz = sz;
+        vector<int> cnt(sz);
+        int res = 0;
+        for(auto& g : groups)
+        {
+            if(g % sz == 0) res++;
+            else if(cnt[(sz - g % sz) % sz])
+            {
+                res++;
+                --cnt[(sz - g % sz) % sz];
+            }
+            else ++cnt[g % sz];
+        }
+        return res + dfs(cnt, 0);
+    }
 };
