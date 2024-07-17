@@ -35,7 +35,7 @@ public:
         }
         auto rowOrder = dfs(rowGraph, rowDegree), colOrder = dfs(colGraph, colDegree);
         if(rowOrder.empty() || colOrder.empty()) return {};
-        vector<vector<int>> pos(k + 1, vector<int>(k + 1, -1));
+        vector<vector<int>> pos(k + 1, vector<int>(2, -1));
         for(int i = 0; i < k; i++)
         {
             pos[rowOrder[i]][0] = i;
