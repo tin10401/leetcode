@@ -22,7 +22,7 @@ public:
                 res = (res + dfs(row, col + 1, prevMask, setMask(currMask, i, col))) % mod;
             }
         }
-        if(col == 0) dp[row][prevMask] = res;
+        dp[row][prevMask] = res;
         return res;
     }
 
