@@ -12,6 +12,8 @@ public:
         priority_queue<array<int, 3>, vector<array<int, 3>>, greater<array<int, 3>>> minHeap;
         minHeap.push({fees[0], 0, 0});
         dp[0][0] = fees[0];
+        vector<int> currTime(n, INT_MAX);
+        currTime[0] = 0;
         while(!minHeap.empty())
         {
             auto [cost, node, time] = minHeap.top();
@@ -22,8 +24,9 @@ public:
             {
                 int newCost = cost + fees[nei];
                 int newTime = c + time;
-                if(newTime <= maxTime && dp[nei][newTime] > newCost)
+                if(newTime <= maxTime && newTime <= currTime[nei] && dp[nei][newTime] > newCost)
                 {
+                    currTime[nei] = newTime;
                     dp[nei][newTime] = newCost;
                     minHeap.push({newCost, nei, newTime});
                 }
