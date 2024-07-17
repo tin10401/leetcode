@@ -17,7 +17,7 @@ public:
             auto [cost, node, time] = minHeap.top();
             minHeap.pop();
             if(node == n - 1) return cost;
-            if(dp[node][time] < cost) continue;
+            if(dp[node][time] != cost) continue;
             for(auto& [nei, c] : graph[node])
             {
                 int newCost = cost + fees[nei];
