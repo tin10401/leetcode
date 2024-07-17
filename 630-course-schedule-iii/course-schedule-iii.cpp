@@ -11,19 +11,14 @@ public:
         ll time = 0, res = 0;
         for(auto& course : courses)
         {
-            if(time + course[0] <= course[1])
+            time += course[0];
+            maxHeap.push(course[0]);
+            while(time > course[1]) 
             {
-                time += course[0];
-                maxHeap.push(course[0]);
-            }
-            else if(!maxHeap.empty() && maxHeap.top() > course[0])
-            {
-                time = time + course[0] - maxHeap.top();
+                time -= maxHeap.top();
                 maxHeap.pop();
-                maxHeap.push(course[0]);
             }
-            res = max(res, (ll)maxHeap.size());
         }
-        return res;
+        return maxHeap.size();
     }
 };
