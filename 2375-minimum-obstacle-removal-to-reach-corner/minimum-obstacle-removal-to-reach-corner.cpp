@@ -4,7 +4,8 @@ public:
         vector<vector<int>> dirs = {{0, 1}, {1, 0}, {-1, 0}, {0, -1}};
         priority_queue<array<int, 3>, vector<array<int, 3>>, greater<array<int, 3>>> minHeap;
         int m = grid.size(), n = grid[0].size();
-        vector<vector<bool>> vis(m, vector<bool>(n, false));
+        bool vis[m][n];
+        memset(vis, false, sizeof(vis));
         minHeap.push({0, 0, 0});
         while(!minHeap.empty())
         {
