@@ -8,7 +8,7 @@ public:
             int curr = 0;
             for(int x = i; x <= maxi; x += i)
             {
-                if(s.count(x))
+                if(s.find(x) != s.end())
                 {
                     curr = gcd(curr, x);
                     if(curr == i) 
