@@ -1,43 +1,40 @@
-int dp[1001][6][1036][4];
 class Solution {
 public:
-    vector<vector<int>> grid;
-    int mod = 1e9 + 7, m, n;
-    int getMask(int row)
-    {
-        int mask = 0;
-        for(int i = 0; i < m; i++)
-        {
-            mask |= ((grid[row][i] << (2 * i)));
-        }
-        return mask;
+    int dp[1001][1034], m, n, mod = 1e9 + 7;
+
+    // Function to set a value in the mask
+    int setMask(int mask, int val, int index) {
+        return mask | (val << (2 * index));
     }
-    int dfs(int row, int col)
-    {
-        if(row == n) return 1;
-        if(col == m) return dfs(row + 1, 0);
-        int prev = col == 0 ? 0 : grid[row][col - 1];
-        int mask = row == 0 ? 0 : getMask(row - 1);
-        int res = dp[row][col][mask][prev];
-        if(col == 0 && res != -1) return res;
-        res = 0;
-        int upper = row == 0 ? 0 : grid[row - 1][col];
-        for(int i = 1; i <= 3; i++)
-        {
-            if(i != upper && i != prev)
-            {
-                grid[row][col] = i;
-                res = (res + dfs(row, col + 1)) % mod;
-                grid[row][col] = 0;
+
+    // Function to get a value from the mask
+    int getMask(int mask, int index) {
+        return (mask >> (2 * index)) & 3;
+    }
+
+    // DFS function to calculate the number of ways to color the grid
+    int dfs(int row, int col, int prevMask, int currMask) {
+        if (row == n) return 1; // Base case: reached the end of the grid
+        if (col == m) return dfs(row + 1, 0, currMask, 0); // Move to the next row
+
+        if (col == 0 && dp[row][prevMask] != -1) return dp[row][prevMask]; // Memoization
+
+        int res = 0;
+        for (int i = 1; i <= 3; i++) { // Iterate over the three possible colors (1, 2, 3)
+            if (i != getMask(prevMask, col) && (col == 0 || i != getMask(currMask, col - 1))) {
+                res = (res + dfs(row, col + 1, prevMask, setMask(currMask, i, col))) % mod;
             }
         }
-        if(col == 0) dp[row][col][mask][prev] = res;
+
+        if (col == 0) dp[row][prevMask] = res; // Memoization
         return res;
     }
+
+    // Function to initialize and start the DFS
     int colorTheGrid(int m, int n) {
-        memset(dp, -1, sizeof(dp));
-        grid.resize(n, vector<int>(m, 0));
-        this->m = m, this->n = n;
-        return dfs(0, 0);
+        memset(dp, -1, sizeof(dp)); // Initialize the DP array with -1
+        this->m = m;
+        this->n = n;
+        return dfs(0, 0, 0, 0); // Start the DFS from the first cell
     }
 };
