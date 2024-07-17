@@ -13,30 +13,30 @@ public:
         if(s[i] == '0') return 0;
         ll& res = dp[i];
         if(res != -1) return res;
-        res = dfs(i + 1, s) * (s[i] == '*' ? 9 : 1);
+        res = (dfs(i + 1, s) * (s[i] == '*' ? 9 : 1)) % mod;
         if(i < s.size() - 1)
         {
             if(s[i] == '*' && s[i + 1] == '*')
             {
-                res = (res + dfs(i + 2, s) * 15) % mod;
+                res += dfs(i + 2, s) * 15;
+                res %= mod;
             }
             else if(s[i] == '*')
             {
-                res = (res + dfs(i + 2, s) * (s[i + 1] <= '6' ? 2 : 1)) % mod;
+                res += dfs(i + 2, s) * (s[i + 1] <= '6' ? 2 : 1);
+                res %= mod;
             }
             else if(s[i + 1] == '*')
             {
-                res = (res + dfs(i + 2, s) * (s[i] == '1' ? 9 : (s[i] == '2' ? 6 : 0))) % mod;
+                res += dfs(i + 2, s) * (s[i] == '1' ? 9 : (s[i] == '2' ? 6 : 0));
+                res %= mod;
             }
-            else if(s[i] == '1')
+            else if(s[i] == '1' || (s[i] == '2' && s[i + 1] <= '6'))
             {
-                res = (res + dfs(i + 2, s)) % mod;
-            }
-            else if(s[i] == '2' && s[i + 1] <= '6')
-            {
-                res = (res + dfs(i + 2, s)) % mod;
+                res += dfs(i + 2, s);
+                res %= mod;
             }
         }
-        return res;
+        return res % mod;
     }
 };
