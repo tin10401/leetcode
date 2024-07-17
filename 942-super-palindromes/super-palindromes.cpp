@@ -8,18 +8,24 @@ public:
             string s = to_string(num);
             return s == string(rbegin(s), rend(s));
         };
+        auto transform = [&](ll curr, ll num)
+        {
+            ll rev = 0, base = 1;
+            while(num)
+            {
+                rev = rev * 10 + num % 10;
+                base *= 10;
+                num /= 10;
+            }
+            return curr * base + rev;
+        };
         for(int i = 1; i <= 1e5; i++)
         {   
-            string s = to_string(i);
-            string rev = s;
-            rev.pop_back();
-            reverse(begin(rev), end(rev));
-            ll curr = stoll(s + rev);
+            ll curr = transform(i, i / 10);
             curr *= curr;
             if(curr >= left && curr <= right && isValid(curr)) res++;
             if(curr > right) break;
-            s += string(rbegin(s), rend(s));
-            curr = stoll(s);
+            curr = transform(i, i);
             curr *= curr;
             if(curr >= left && curr <= right && isValid(curr)) res++;
         }
