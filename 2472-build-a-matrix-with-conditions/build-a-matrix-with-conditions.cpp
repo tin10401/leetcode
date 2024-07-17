@@ -7,18 +7,18 @@ public:
         {
             if(degree[i] == 0) q.push(i);
         }
-        vector<int> order;
+        vector<int> res;
         while(!q.empty())
         {
             int node = q.front();
             q.pop();
-            order.push_back(node);
+            res.push_back(node);
             for(auto& nei : graph[node])
             {
                 if(--degree[nei] == 0) q.push(nei);
             }
         }
-        return order.size() == degree.size() - 1 ? order : vector<int>(); 
+        return res.size() == degree.size() - 1 ? res : vector<int>();
     }
     vector<vector<int>> buildMatrix(int k, vector<vector<int>>& rowConditions, vector<vector<int>>& colConditions) {
         vector<vector<int>> rowGraph(k + 1), colGraph(k + 1);
@@ -35,15 +35,16 @@ public:
         }
         auto rowOrder = dfs(rowGraph, rowDegree), colOrder = dfs(colGraph, colDegree);
         if(rowOrder.empty() || colOrder.empty()) return {};
-        vector<vector<int>> position(k + 1, vector<int>(2, -1));
-        for (int i = 0; i < k; ++i) {
-            position[rowOrder[i]][0] = i;
-            position[colOrder[i]][1] = i;
+        vector<vector<int>> pos(k + 1, vector<int>(k + 1, -1));
+        for(int i = 0; i < k; i++)
+        {
+            pos[rowOrder[i]][0] = i;
+            pos[colOrder[i]][1] = i;
         }
-
-        vector<vector<int>> matrix(k, vector<int>(k, 0));
-        for (int num = 1; num <= k; ++num) {
-            matrix[position[num][0]][position[num][1]] = num;
+        vector<vector<int>> matrix(k, vector<int>(k));
+        for(int i = 1; i <= k; i++)
+        {
+            matrix[pos[i][0]][pos[i][1]] = i;
         }
         return matrix;
     }
