@@ -21,6 +21,7 @@ public:
                 if(row >= 0 && col >= 0 && row < m && col < n && !vis[row][col])
                 {
                     int newCost = cost + grid[row][col];
+                    if(row == m - 1 && col == n - 1) return newCost;
                     minHeap.push({newCost, row, col});
                 }
             }
