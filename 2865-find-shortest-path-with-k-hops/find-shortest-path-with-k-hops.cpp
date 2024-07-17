@@ -15,6 +15,7 @@ public:
         {
             auto [cost, node, rem] = minHeap.top();
             minHeap.pop();
+            if(node == d) return cost;
             if(dp[node][rem] < cost) continue;
             for(auto& [nei, c] : graph[node])
             {
@@ -31,6 +32,6 @@ public:
                 }
             }
         }
-        return *min_element(begin(dp[d]), end(dp[d]));
+        return -1;
     }
 };
