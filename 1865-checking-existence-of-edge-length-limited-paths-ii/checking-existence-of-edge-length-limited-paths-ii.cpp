@@ -1,37 +1,29 @@
-#include <vector>
-#include <algorithm>
-#include <climits>
-
-using namespace std;
-
 class UnionFind
 {
-public:
+    public:
     vector<int> root, rank, weight;
     int n;
     UnionFind()
     {
         this->n = 1e4 + 1;
         root.resize(n), rank.resize(n, 1), weight.resize(n);
-        for (int i = 0; i < n; ++i) root[i] = i; // Initialize root with its own index
+        iota(begin(root), end(root), 0);
     }
 
     int find(int x, int limit)
     {
-        if (root[x] == x || weight[x] >= limit) return x;
-        int r = find(root[x], limit);
-
-        return r;
+        if(root[x] == x || weight[x] >= limit) return x;
+        return find(root[x], limit);
     }
 
     void merge(int x, int y, int limit)
     {
         int u = find(x, INT_MAX);
         int v = find(y, INT_MAX);
-        if (u != v)
+        if(u != v)
         {
-            if (rank[v] > rank[u]) swap(u, v);
-            if (rank[u] == rank[v]) rank[u]++;
+            if(rank[v] > rank[u]) swap(u, v);
+            rank[u] += rank[v];
             root[v] = u;
             weight[v] = limit;
         }
@@ -47,7 +39,7 @@ public:
             return a[2] < b[2];
         };
         sort(begin(edgeList), end(edgeList), compare);
-        for (auto& edge : edgeList)
+        for(auto& edge : edgeList)
         {
             root.merge(edge[0], edge[1], edge[2]);
         }
