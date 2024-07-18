@@ -1,38 +1,51 @@
+#include <vector>
+#include <algorithm>
+#include <numeric>
+
 class DistanceLimitedPathsExist {
 public:
-    vector<vector<pair<int, int>>> graph;
-    vector<int> vis;
-    DistanceLimitedPathsExist(int n, vector<vector<int>>& edgeList) {
-        graph.resize(n), vis.resize(n);
-        for(auto& edge : edgeList)
-        {
-            graph[edge[0]].push_back({edge[1], edge[2]});
-            graph[edge[1]].push_back({edge[0], edge[2]});
+    const int N = 10010;
+    std::vector<int> par, rank, weight;
+    const int imax = INT_MAX;
+
+    DistanceLimitedPathsExist(int n, std::vector<std::vector<int>>& edgeList) {
+        par.resize(N);
+        rank.resize(N, 1);
+        weight.resize(N, 0);
+        std::iota(par.begin(), par.end(), 0);  // Initialize parent array with its indices
+
+        std::sort(edgeList.begin(), edgeList.end(), [](const std::vector<int>& e1, const std::vector<int>& e2) {
+            return e1[2] < e2[2];
+        });
+
+        for(const auto& edge : edgeList) {
+            unionSets(edge[0], edge[1], edge[2]);
         }
     }
-    
+
     bool query(int p, int q, int limit) {
-        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> minHeap;
-        minHeap.push({0, p});
-        fill(begin(vis), end(vis), 0);
-        while(!minHeap.empty())
-        {
-            auto [cost, node] = minHeap.top(); minHeap.pop();
-            if(node == q) return true;
-            if(vis[node]) continue;
-            vis[node] = true;
-            for(auto& [nei, c] : graph[node])
-            {
-                if(c >= limit || vis[nei]) continue;
-                minHeap.push({cost + c, nei}); 
+        return find(p, limit) == find(q, limit);
+    }
+
+private:
+    int find(int i, int limit) {
+        if(par[i] == i || weight[i] >= limit) return i;
+        return find(par[i], limit);
+    }
+
+    void unionSets(int i, int j, int limit) {
+        int ri = find(i, imax);
+        int rj = find(j, imax);
+        if(ri != rj) {
+            if(rank[ri] <= rank[rj]) {
+                par[ri] = rj;
+                rank[rj] += rank[ri];
+                weight[ri] = limit;
+            } else {
+                par[rj] = ri;
+                rank[ri] += rank[rj];
+                weight[rj] = limit;
             }
         }
-        return false;
     }
 };
-
-/**
- * Your DistanceLimitedPathsExist object will be instantiated and called as such:
- * DistanceLimitedPathsExist* obj = new DistanceLimitedPathsExist(n, edgeList);
- * bool param_1 = obj->query(p,q,limit);
- */
