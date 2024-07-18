@@ -8,7 +8,6 @@ public:
     {
         int& res = dp[node];
         if(res != -1) return res;
-        vector<int> list;
         priority_queue<int, vector<int>, greater<int>> minHeap;
         for(auto& nei : graph[node])
         {
