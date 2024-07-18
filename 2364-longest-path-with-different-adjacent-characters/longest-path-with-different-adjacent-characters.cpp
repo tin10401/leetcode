@@ -9,21 +9,22 @@ public:
         int& res = dp[node];
         if(res != -1) return res;
         vector<int> list;
+        priority_queue<int, vector<int>, greater<int>> minHeap;
         for(auto& nei : graph[node])
         {
             if(nei != par && s[nei] != s[node])
             {
-                list.push_back(dfs(nei, node));
+                minHeap.push(dfs(nei, node));
+                if(minHeap.size() > 2) minHeap.pop();
             }
         }
-        sort(rbegin(list), rend(list));
-        if(list.size() >= 2)
+        int total = 1, next = 0;
+        while(!minHeap.empty())
         {
-            ans = max(ans, list.front() + list[1] + 1);
-            return res = 1 + list.front();
+            total += minHeap.top(); next = minHeap.top(); minHeap.pop();
         }
-        if(!list.empty()) ans = max(ans, list.front() + 1);
-        return res = (!list.empty() ? list.front() : 0) + 1;
+        ans = max(ans, total);
+        return res = next + 1;
     }
     int longestPath(vector<int>& parent, string s) {
         memset(dp, -1, sizeof(dp));
