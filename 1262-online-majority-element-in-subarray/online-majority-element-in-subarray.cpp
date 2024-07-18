@@ -1,66 +1,75 @@
-class Node {
-public:
-    int val;
-    int freq;
-    Node(int v = 0, int f = 0) : val(v), freq(f) {}
-};
+class SegmentTree
+{
+    public:
+    vector<pair<int, int>> root;
+    int n;
+    SegmentTree() {}
 
-Node merge(Node a, Node b) {
-    if (a.val == b.val) {
-        return Node(a.val, a.freq + b.freq);
+    void build(vector<int>& arr)
+    {
+        this->n = arr.size();
+        root.resize(n * 4);
+        build(0, 0, n - 1, arr);
     }
-    if (a.freq > b.freq) {
-        return Node(a.val, a.freq - b.freq);
+
+    void build(int i, int left, int right, vector<int>& arr)
+    {
+        if(left == right)
+        {
+            root[i] = {arr[left], 1};
+            return;
+        }
+        int middle = left + (right - left) / 2;
+        build(i * 2 + 1, left, middle, arr);
+        build(i * 2 + 2, middle + 1, right, arr);
+        root[i] = merge(root[i * 2 + 1], root[i * 2 + 2]);
     }
-    return Node(b.val, b.freq - a.freq);
-}
+
+    pair<int, int> merge(pair<int, int> a, pair<int, int> b)
+    {
+        if(a.first == b.first) return {a.first, a.second + b.second};
+        if(a.second > b.second) return {a.first, a.second - b.second};
+        return {b.first, b.second - a.second};
+    }
+
+    int get(int start, int end)
+    {
+        return get(0, 0, n - 1, start, end).first;
+    }
+
+    pair<int, int> get(int i, int left, int right, int start, int end)
+    {
+        if(left >= start && right <= end) return root[i];
+        if(left > end || right < start) return {0, 0};
+        int middle = left + (right - left) / 2;
+        return merge(get(i * 2 + 1, left, middle, start, end), get(i * 2 + 2, middle + 1, right, start, end));
+    }
+
+};
 
 class MajorityChecker {
 public:
-    int n;
-    vector<int> arr;
-    vector<Node> tree;
-    unordered_map<int, vector<int>> indexes;
-
+    SegmentTree root;
+    unordered_map<int, vector<int>> list;
     MajorityChecker(vector<int>& arr) {
-        this->n = arr.size();
-        this->arr = arr;
-        int size = 1 << (int)ceil(log2(this->n)) + 1;
-        tree.resize(size);
-        build(0, 0, this->n - 1);
-    }
-
-    void build(int pos, int l, int r) {
-        if (l == r) {
-            tree[pos] = Node(arr[l], 1);
-            indexes[arr[l]].push_back(l);
-        } else {
-            int mid = (l + r) / 2;
-            build(pos * 2 + 1, l, mid);
-            build(pos * 2 + 2, mid + 1, r);
-            tree[pos] = merge(tree[pos * 2 + 1], tree[pos * 2 + 2]);
+        root.build(arr);
+        for(int i = 0; i < arr.size(); i++)
+        {
+            list[arr[i]].push_back(i);
         }
     }
-
-    Node pquery(int pos, int start, int end, int l, int r) {
-        if (l > end || r < start) {
-            return Node(0, 0);
-        }
-        if (start <= l && r <= end) {
-            return tree[pos];
-        }
-        int mid = (l + r) / 2;
-        Node a = pquery(pos * 2 + 1, start, end, l, mid);
-        Node b = pquery(pos * 2 + 2, start, end, mid + 1, r);
-        return merge(a, b);
-    }
-
-    int query(int l, int r, int threshold) {
-        int candidate = pquery(0, l, r, 0, n - 1).val;
-        if (candidate == 0) return -1;
-        auto& index_list = indexes[candidate];
-        auto s = lower_bound(index_list.begin(), index_list.end(), l);
-        auto e = upper_bound(index_list.begin(), index_list.end(), r);
-        return (e - s >= threshold) ? candidate : -1;
+    
+    int query(int left, int right, int threshold) {
+        int e = root.get(left, right);
+        int leftRange = lower_bound(list[e].begin(), list[e].end(), left) - begin(list[e]);
+        int rightRange = upper_bound(list[e].begin(), list[e].end(), right) - begin(list[e]);
+        if(rightRange - leftRange >= threshold) return e;
+        return -1;
     }
 };
+
+/**
+ * Your MajorityChecker object will be instantiated and called as such:
+ * MajorityChecker* obj = new MajorityChecker(arr);
+ * int param_1 = obj->query(left,right,threshold);
+ */
