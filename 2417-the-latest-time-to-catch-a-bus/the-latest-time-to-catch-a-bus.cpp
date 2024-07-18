@@ -23,7 +23,7 @@ public:
             else right = middle - 1;
         }
         unordered_set<int> s(begin(passengers), end(passengers));
-        while(s.count(res)) res--;
+        while(binary_search(passengers.begin(),passengers.end(),res)) --res;
         return res;
     }
 };
