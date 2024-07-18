@@ -1,51 +1,65 @@
 #include <vector>
 #include <algorithm>
-#include <numeric>
+#include <climits>
 
-class DistanceLimitedPathsExist {
+using namespace std;
+
+class UnionFind
+{
 public:
-    const int N = 10010;
-    std::vector<int> par, rank, weight;
-    const int imax = INT_MAX;
-
-    DistanceLimitedPathsExist(int n, std::vector<std::vector<int>>& edgeList) {
-        par.resize(N);
-        rank.resize(N, 1);
-        weight.resize(N, 0);
-        std::iota(par.begin(), par.end(), 0);  // Initialize parent array with its indices
-
-        std::sort(edgeList.begin(), edgeList.end(), [](const std::vector<int>& e1, const std::vector<int>& e2) {
-            return e1[2] < e2[2];
-        });
-
-        for(const auto& edge : edgeList) {
-            unionSets(edge[0], edge[1], edge[2]);
-        }
+    vector<int> root, rank, weight;
+    int n;
+    UnionFind()
+    {
+        this->n = 1e4 + 1;
+        root.resize(n), rank.resize(n, 1), weight.resize(n);
+        for (int i = 0; i < n; ++i) root[i] = i; // Initialize root with its own index
     }
 
-    bool query(int p, int q, int limit) {
-        return find(p, limit) == find(q, limit);
+    int find(int x, int limit)
+    {
+        if (root[x] == x || weight[x] >= limit) return x;
+        int r = find(root[x], limit);
+
+        return r;
     }
 
-private:
-    int find(int i, int limit) {
-        if(par[i] == i || weight[i] >= limit) return i;
-        return find(par[i], limit);
-    }
-
-    void unionSets(int i, int j, int limit) {
-        int ri = find(i, imax);
-        int rj = find(j, imax);
-        if(ri != rj) {
-            if(rank[ri] <= rank[rj]) {
-                par[ri] = rj;
-                rank[rj] += rank[ri];
-                weight[ri] = limit;
-            } else {
-                par[rj] = ri;
-                rank[ri] += rank[rj];
-                weight[rj] = limit;
-            }
+    void merge(int x, int y, int limit)
+    {
+        int u = find(x, INT_MAX);
+        int v = find(y, INT_MAX);
+        if (u != v)
+        {
+            if (rank[v] > rank[u]) swap(u, v);
+            if (rank[u] == rank[v]) rank[u]++;
+            root[v] = u;
+            weight[v] = limit;
         }
     }
 };
+
+class DistanceLimitedPathsExist {
+public:
+    UnionFind root;
+    DistanceLimitedPathsExist(int n, vector<vector<int>>& edgeList) {
+        auto compare = [](const vector<int>& a, const vector<int>& b)
+        {
+            return a[2] < b[2];
+        };
+        sort(begin(edgeList), end(edgeList), compare);
+        for (auto& edge : edgeList)
+        {
+            root.merge(edge[0], edge[1], edge[2]);
+        }
+    }
+    
+    bool query(int p, int q, int limit) {
+        return root.find(p, limit) == root.find(q, limit);
+    }
+};
+
+/**
+ * Your DistanceLimitedPathsExist object will be instantiated and called as such:
+ * DistanceLimitedPathsExist* obj = new DistanceLimitedPathsExist(n, edgeList);
+ * bool param_1 = obj->query(p,q,limit);
+ */
