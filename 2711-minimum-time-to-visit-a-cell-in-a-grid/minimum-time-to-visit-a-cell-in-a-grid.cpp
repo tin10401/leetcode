@@ -20,7 +20,7 @@ public:
                     int newTime = time;
                     if(grid[row][col] > time + 1)
                     {
-                        if(r == 0 && c == 0 && count == 0) continue;
+                        if(r == 0 && c == 0 && time == 0) continue;
                         int diff = grid[row][col] - time;
                         newTime += diff + (diff % 2 == 0 ? 1 : 0);
                     }
@@ -32,7 +32,6 @@ public:
                     }
                 }
             }
-            count++;
         }
         return -1;
     }
