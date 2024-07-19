@@ -19,6 +19,7 @@ public:
             {
                 int node = q.front();
                 q.pop();
+                bool found = false;
                 for(auto& nei : graph[node])
                 {
                     if(dis[node] + 1 < dis[nei]) 
@@ -32,6 +33,8 @@ public:
                         if(parent[nei] != node && parent[node] != nei)
                         {
                             res = min(res, dis[nei] + dis[node] + 1);
+                            found = true;
+                            break;
                         }
                     }
                 }
