@@ -63,9 +63,9 @@ public:
         auto eq = root.compute();
         for(int i = 0; i < n; i++)
         {
-            for(int j = 0; j < n; j++)
+            for(int j : eq[i])
             {
-                for(int k = 0; k < n; k++)
+                for(int k : eq[i])
                 {
                     if(!answer[i].count(j) || !answer[k].count(i) || !answer[k].count(j)) continue;
                     auto x = answer[i][j];
