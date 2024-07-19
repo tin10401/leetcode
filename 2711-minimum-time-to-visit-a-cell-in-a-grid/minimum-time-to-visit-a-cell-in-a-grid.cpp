@@ -7,7 +7,6 @@ public:
         bool found = false;
         int m = grid.size(), n = grid[0].size();
         vector<vector<int>> dis(m, vector<int>(n, 1e8));
-        int count = 0;
         while(!minHeap.empty())
         {
             auto [time, r, c] = minHeap.top(); minHeap.pop();
