@@ -16,6 +16,7 @@ public:
         {
             for(int j = 0; j < n; j++)
             {
+                if(!vis[i][j]) continue;
                 for(int k = 0; k < n; k++)
                 {
                     if(vis[i][j] && vis[i][k] && vis[j][k])
