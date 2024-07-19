@@ -6,7 +6,7 @@ public:
         while(--step)
         {
             res += time;
-            if((res / change) % 2)
+            if((res / change) & 1)
             {
                 res = (res / change + 1) * change;
             }
@@ -17,28 +17,34 @@ public:
         vector<vector<int>> graph(n + 1);
         for(auto& edge : edges)
         {
-            graph[edge[0]].push_back(edge[1]);
-            graph[edge[1]].push_back(edge[0]);
+            graph[edge[0]].push_back({edge[1]});
+            graph[edge[1]].push_back({edge[0]});
         }
-        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> minHeap;
-        minHeap.push({0, 1});
-        vector<int> count(n + 1, 10001);
-        while(!minHeap.empty() && minHeap.top().first <= count[n] + 1)
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> q;
+        q.push({0, 1});
+        vector<int> count(n + 1);
+        vector<int> dis1(n + 1, INT_MAX), dis2(n + 1, INT_MAX);
+        dis1[0] = 0;
+        while(!q.empty())
         {
-            auto [cost, node] = minHeap.top();
-            minHeap.pop();
-            while(!minHeap.empty() && minHeap.top().first == cost && minHeap.top().second == node) minHeap.pop();
-            count[node] = min(count[node], cost);
-            if(node == n && cost > count[node])
-            {
-                return compute(cost, time, change);
-            }
-            if(cost > count[node] + 1) continue;
+            auto [step, node] = q.top(); q.pop();
+            count[node]++;
+            if(node == n && count[node] == 2) return compute(step, time, change);
             for(auto& nei : graph[node])
             {
-                minHeap.push({cost + 1, nei});
+                if(count[nei] == 2) continue;
+                if(step + 1 < dis1[nei])
+                {
+                    dis1[nei] = step + 1;
+                    q.push({step + 1, nei});
+                }
+                else if(dis1[nei] != step + 1 && dis2[nei] > step + 1)
+                {
+                    dis2[nei] = step + 1;
+                    q.push({step + 1, nei});
+                }
             }
         }
-        return compute(count[n] + 2, time, change);
+        return 0;
     }
 };
