@@ -1,77 +1,80 @@
-class UnionFind {
-public:
+class UnionFind
+{
+    public:
     vector<int> root, rank;
-    vector<double> ratio;
     int n;
 
-    UnionFind(int n) {
+    UnionFind(int n)
+    {
         this->n = n;
-        root.resize(n);
-        rank.resize(n, 1);
-        ratio.resize(n, 1.0);
-        for (int i = 0; i < n; ++i) {
-            root[i] = i;
+        root.resize(n, -1), rank.resize(n, 1);
+    }
+
+    int find(int x)
+    {
+        if(root[x] == -1) return x;
+        return root[x] = find(root[x]);
+    }
+
+    void merge(int x, int y)
+    {
+        int u = find(x), v = find(y);
+        if(u != v)
+        {
+            if(rank[v] > rank[u]) swap(u, v);
+            rank[u] += rank[v];
+            root[v] = u;
         }
     }
 
-    int find(int x) {
-        if (root[x] != x) {
-            int oldRoot = root[x];
-            root[x] = find(root[x]);
-            ratio[x] *= ratio[oldRoot];
+    vector<vector<int>> compute()
+    {
+        vector<vector<int>> res(n);
+        for(int i = 0; i < n; i++)
+        {
+            res[find(i)].push_back(i);
         }
-        return root[x];
-    }
-
-    bool merge(int x, int y, double value) {
-        int rootX = find(x);
-        int rootY = find(y);
-        if (rootX != rootY) {
-            if (rank[rootX] > rank[rootY]) {
-                root[rootY] = rootX;
-                ratio[rootY] = ratio[x] / (value * ratio[y]);
-            } else {
-                root[rootX] = rootY;
-                ratio[rootX] = value * ratio[y] / ratio[x];
-                if (rank[rootX] == rank[rootY]) {
-                    rank[rootY]++;
-                }
-            }
-        } else {
-            double expected = ratio[x] / ratio[y];
-            if (abs(value - expected) > 1e-6) {
-                return true; // contradiction found
-            }
-        }
-        return false;
+        return res;
     }
 };
 
 class Solution {
 public:
     bool checkContradictions(vector<vector<string>>& equations, vector<double>& values) {
-        unordered_map<string, int> indexMap;
+        unordered_map<string, int> list;
         int n = 0;
-
-        // Create index mapping for variables
-        for (const auto& e : equations) {
-            if (indexMap.find(e[0]) == indexMap.end()) indexMap[e[0]] = n++;
-            if (indexMap.find(e[1]) == indexMap.end()) indexMap[e[1]] = n++;
+        for(auto& e : equations)
+        {
+            auto x = e[0], y = e[1];
+            if(!list.count(x)) list[x] = n++;
+            if(!list.count(y)) list[y] = n++;
         }
-
-        UnionFind uf(n);
-
-        // Process each equation
-        for (int i = 0; i < equations.size(); ++i) {
-            int u = indexMap[equations[i][0]];
-            int v = indexMap[equations[i][1]];
-            double value = values[i];
-
-            if (uf.merge(u, v, value)) {
-                return true; // contradiction found
+        unordered_map<int, unordered_map<int, double>> answer;
+        UnionFind root(n);
+        for(int i = 0; i < values.size(); i++)
+        {
+            int u = list[equations[i][0]], v = list[equations[i][1]];
+            double x = values[i];
+            if(answer[u].count(v) && answer[u][v] != x) return true;
+            root.merge(u, v);
+            answer[u][v] = x;
+            answer[v][u] = 1.0 / x;
+        }
+        auto eq = root.compute();
+        for(int i = 0; i < n; i++)
+        {
+            for(int j = 0; j < n; j++)
+            {
+                for(int k = 0; k < n; k++)
+                {
+                    if(!answer[i].count(j) || !answer[k].count(i) || !answer[k].count(j)) continue;
+                    auto x = answer[i][j];
+                    auto y = answer[k][i];
+                    auto jk = answer[k][j];
+                    if(abs(x * y - jk) >= 1e-5) return true;
+                }
             }
         }
-
-        return false; // no contradiction found
+        return false;
     }
 };
