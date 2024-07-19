@@ -40,12 +40,12 @@ public:
     {
         int& res = dp[node];
         if(res != -1) return res;
-        res = 0;
+        res = 1;
         for(auto& nei : graph[node])
         {
             if(nei != par) res += dfs(nei, node);
         }
-        res += (res > 0);
+        // res += (res > 0);
         return res;
     }
     vector<int> countVisitedNodes(vector<int>& edges) {
