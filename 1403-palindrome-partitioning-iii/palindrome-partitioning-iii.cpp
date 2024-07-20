@@ -13,11 +13,9 @@ public:
             {
                 palin[j][k] = palin[j + 1][k - 1] + (s[j] != s[k]);
             }
-            int prev = 0;
             for(int j = i, k = i + 1; j >= 0 && k < n; j--, k++)
             {
-                palin[j][k] = prev + (s[j] != s[k]);
-                prev = palin[j][k];
+                palin[j][k] = palin[j + 1][k - 1] + (s[j] != s[k]);
             }
         }
 
