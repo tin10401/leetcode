@@ -3,7 +3,7 @@ public:
     bool isValidPalindrome(string s, int k) {
         int n = s.size();
         string ss = string(rbegin(s), rend(s));
-        int dp[n + 1][n + 1];
+        int dp[2][n + 1];
         memset(dp, 0, sizeof(dp));
         for(int i = 1; i <= n; i++)
         {
@@ -11,14 +11,14 @@ public:
             {
                 if(s[i - 1] == ss[j - 1])
                 {
-                    dp[i][j] = 1 + dp[i - 1][j - 1];
+                    dp[i % 2][j] = 1 + dp[(i - 1) % 2][j - 1];
                 }
                 else
                 {
-                    dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+                    dp[i % 2][j] = max(dp[(i - 1) % 2][j], dp[i % 2][j - 1]);
                 }
             }
         }
-        return (s.size() - dp[n][n]) <= k;
+        return (s.size() - dp[n % 2][n]) <= k;
     }
 };
