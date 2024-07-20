@@ -1,23 +1,10 @@
 class Solution {
 public:
-    int dp[101][101];
-    int dfs(int index, int k, const string& s)
-    {
-        if(index == s.size()) return k == 0 ? 0 : 1e9;
-        if(k == 1) return palin[index][s.size() - 1];
-        int& res = dp[index][k];
-        if(res != -1) return res;
-        res = INT_MAX;
-        for(int i = index; i < s.size(); i++)
-        {
-            res = min(res, palin[index][i] + dfs(i + 1, k - 1, s));
-        }
-        return res;
-    }
-    vector<vector<int>> palin;
+    
     int palindromePartition(string s, int k) {
-        memset(dp, -1, sizeof(dp));
         int n = s.size();
+        vector<vector<int>> palin, dp(n + 1, vector<int>(k + 1, 1e9));
+        dp[0][k] = 0;
         palin.assign(n, vector<int>(n));
         for(int i = 0; i < s.size(); i++)
         {
@@ -32,6 +19,18 @@ public:
                 prev = palin[j][k];
             }
         }
-        return dfs(0, k, s);
+
+        for(int i = 0; i < n; i++)
+        {
+            for(int j = i; j < n; j++)
+            {
+                for(int K = k - 1; K >= 0; K--)
+                {
+                    dp[j + 1][K] = min(dp[j + 1][K], dp[i][K + 1] + palin[i][j]);
+                }
+            }
+        }
+
+        return dp[n][0];
     }
 };
