@@ -9,8 +9,7 @@ public:
     }
     
     vector<int> reset() {
-        curr = nums;
-        return curr;
+        return nums;
     }
     
     vector<int> shuffle() {
