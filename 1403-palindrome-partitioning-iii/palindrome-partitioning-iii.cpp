@@ -3,9 +3,10 @@ public:
     
     int palindromePartition(string s, int k) {
         int n = s.size();
-        vector<vector<int>> palin, dp(n + 1, vector<int>(k + 1, 1e9));
+        int dp[101][101], palin[101][101];
+        memset(palin, 0, sizeof(palin));
+        for(int i = 0; i < 101; i++) fill(dp[i], dp[i] + 101, 1e9);
         dp[0][k] = 0;
-        palin.assign(n, vector<int>(n));
         for(int i = 0; i < s.size(); i++)
         {
             for(int j = i - 1, k = i + 1; j >= 0 && k < n; j--, k++)
