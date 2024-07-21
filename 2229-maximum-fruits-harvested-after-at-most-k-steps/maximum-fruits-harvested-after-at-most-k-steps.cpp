@@ -1,7 +1,7 @@
 class Solution {
 public:
     int maxTotalFruits(vector<vector<int>>& fruits, int startPos, int k) {
-       int i = upper_bound(begin(fruits), end(fruits), vector<int>{startPos - k}) - begin(fruits);
+       int i = lower_bound(begin(fruits), end(fruits), vector<int>{startPos - k}) - begin(fruits);
        int res = 0, sum = 0, n = fruits.size();
        for(int j = i; j < n && fruits[j][0] <= startPos + k; j++) 
        {
