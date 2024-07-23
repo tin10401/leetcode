@@ -24,6 +24,6 @@ public:
         return left == 1 || right == 1 ? 2 : 0;
     }
     int minCameraCover(TreeNode* root) {
-        return (dfs(root) < 1 ? 1 : 0) + res; 
+       return (dfs(root) < 1) + res; 
     }
 };
