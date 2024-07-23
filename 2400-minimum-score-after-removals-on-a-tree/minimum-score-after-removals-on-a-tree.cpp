@@ -33,24 +33,21 @@ public:
        {
         for(int j = i + 1; j < n; j++)
         {
+            vector<int> curr;
             if(parent[i][j])
             {
-                vector<int> curr = {sum[0] ^ sum[i], sum[j], sum[i] ^ sum[j]};
-                sort(begin(curr), end(curr));
-                res = min(res, curr.back() - curr.front());
+                curr = {sum[0] ^ sum[i], sum[j], sum[i] ^ sum[j]};
             }
             else if(parent[j][i])
             {
-                vector<int> curr = {sum[0] ^ sum[j], sum[i], sum[j] ^ sum[i]};
-                sort(begin(curr), end(curr));
-                res = min(res, curr.back() - curr.front());
+                curr = {sum[0] ^ sum[j], sum[i], sum[j] ^ sum[i]};
             }
             else
             {
-                vector<int> curr = {sum[0] ^ sum[i] ^ sum[j], sum[i], sum[j]};
-                sort(begin(curr), end(curr));
-                res = min(res, curr.back() - curr.front());
+                curr = {sum[0] ^ sum[i] ^ sum[j], sum[i], sum[j]};
             }
+            sort(begin(curr), end(curr));
+            res = min(res, curr.back() - curr.front());
         }
        }
        return res;
