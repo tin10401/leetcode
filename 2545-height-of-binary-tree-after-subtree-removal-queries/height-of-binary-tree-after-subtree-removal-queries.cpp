@@ -11,31 +11,33 @@
  */
 class Solution {
 public:
-    int level[100001] = {}, depth[100001] = {}, d1[100001] = {}, d2[100001] = {};
-    int dfs(TreeNode* root, int d)
+    int depth[100001] = {}, height[100001] = {}, maxHeight[100001] = {}, secondMaxHeight[100001] = {};
+    int dfs(TreeNode* root, int currDepth)
     {
         if(!root) return 0;
-        level[root->val] = d;
-        depth[root->val] = 1 + max(dfs(root->left, d + 1), dfs(root->right, d + 1));
-        if(d1[d] < depth[root->val])
+        int curr = root->val;
+        depth[curr] = currDepth;
+        height[curr] = 1 + max(dfs(root->left, currDepth + 1), dfs(root->right, currDepth + 1));
+        if(height[curr] > maxHeight[currDepth])
         {
-            d2[d] = d1[d];
-            d1[d] = depth[root->val];
+            secondMaxHeight[currDepth] = maxHeight[currDepth];
+            maxHeight[currDepth] = height[curr];
         }
         else
         {
-            d2[d] = max(d2[d], depth[root->val]);
+            secondMaxHeight[currDepth] = max(secondMaxHeight[currDepth], height[curr]);
         }
-        return depth[root->val];
+        return height[curr];
     }
     vector<int> treeQueries(TreeNode* root, vector<int>& queries) {
         dfs(root, 0);
-        vector<int> res;
+        vector<int> res; 
         for(auto& q : queries)
         {
-            int l = level[q];
-            res.push_back(l + (d1[l] == depth[q] ? d2[l] : d1[l]) - 1);
-        } 
+            int currDepth = depth[q];
+            int ans = currDepth + (maxHeight[currDepth] == height[q] ? secondMaxHeight[currDepth] : maxHeight[currDepth]) - 1;
+            res.push_back(ans);
+        }
         return res;
     }
 };
