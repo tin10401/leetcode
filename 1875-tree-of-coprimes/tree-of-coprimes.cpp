@@ -1,49 +1,38 @@
 class Solution {
 public:
-    vector<int> res, nums;
+    vector<pair<int, int>> list;
     vector<vector<int>> graph;
-    void update(vector<int>& list, int node)
+    vector<int> nums, res, bestDepth;
+    void dfs(int node, int par, int curr)
     {
-        for(auto& it : list)
+        for(int i = 0; i < 51; i++)
         {
-            res[it] = node;
+            auto [depth, index] = list[i];
+            if(depth > bestDepth[node] && gcd(i, nums[node]) == 1)
+            {
+                bestDepth[node] = depth;
+                res[node] = index;
+            }
         }
-    }
-    map<int, vector<int>> dfs(int node, int par)
-    {
-        map<int, vector<int>> curr;
+        auto prev = list[nums[node]];
+        list[nums[node]] = {curr, node};
         for(auto& nei : graph[node])
         {
-            if(nei == par) continue;
-            auto it = dfs(nei, node);
-            if(it.size() > curr.size()) swap(it, curr);
-            for(auto& i : it)
-            {
-                curr[i.first].insert(curr[i.first].end(), begin(i.second), end(i.second));
-            }
+            if(nei != par) dfs(nei, node, curr + 1);
         }
-        for(auto it = begin(curr); it != end(curr);)
-        {
-            if(gcd(it->first, nums[node]) == 1)
-            {
-                update(it->second, node);
-                it = curr.erase(it);
-            }
-            else it++;
-        }
-        curr[nums[node]].push_back(node);
-        return curr;
+        list[nums[node]] = prev;
     }
     vector<int> getCoprimes(vector<int>& nums, vector<vector<int>>& edges) {
-        int n = nums.size();
+        int n = nums.size(); 
         this->nums = nums;
-        res.resize(n, -1), graph.resize(n);
+        graph.resize(n), res.resize(n, -1), bestDepth.resize(n, -1);
+        list.resize(51, {-1, -1});
         for(auto& edge : edges)
         {
             graph[edge[0]].push_back(edge[1]);
             graph[edge[1]].push_back(edge[0]);
-        } 
-        dfs(0, -1);
+        }
+        dfs(0, -1, 0);
         return res;
     }
 };
