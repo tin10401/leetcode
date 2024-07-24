@@ -20,10 +20,9 @@ public:
         array<int, 4> curr = {
             left[0] + right[0] + root->val, 
             left[1] && right[1],
-            max({left[2], right[2], root->val}), 
-            min({left[3], right[3], root->val})};
+            max(left[2], max(right[2], root->val)), 
+            min(left[3], min(right[3], root->val))};
         if(root->val <= left[2] || root->val >= right[3]) curr[1] = false;
-        
         if(curr[1]) res = max(res, curr[0]);
         return curr;
     }
