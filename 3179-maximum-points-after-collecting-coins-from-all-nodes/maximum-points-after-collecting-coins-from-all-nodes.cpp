@@ -3,7 +3,7 @@ public:
     int dp[100001][16];
     vector<vector<int>> graph;
     vector<int> coins;
-    int limit = 15;
+    int limit;
     int dfs(int node, int par, int curr, int k)
     {
         if(curr == limit) return 0;
@@ -27,6 +27,8 @@ public:
        this->coins = coins;
        int n = coins.size();
        graph.resize(n);
+       limit = *max_element(begin(coins), end(coins));
+       limit = (limit == 0 ? 0 : log2(limit)) + 1;
         for(auto& edge : edges)
         {
             graph[edge[0]].push_back(edge[1]);
