@@ -42,7 +42,7 @@ public:
             }
         }
         
-        auto LCA = [&](int a, int b) -> int 
+        auto LCA = [&](int a, int b, auto& LCA) -> int 
         {
             if(depth[a] > depth[b]) swap(a, b);
             int aa = a, bb = b;
@@ -88,7 +88,7 @@ public:
         for(auto& q : queries)
         {
             int a = q[0], b = q[1];
-            res.push_back(LCA(a, b));
+            res.push_back(LCA(a, b, LCA));
         }
         return res;
     }
