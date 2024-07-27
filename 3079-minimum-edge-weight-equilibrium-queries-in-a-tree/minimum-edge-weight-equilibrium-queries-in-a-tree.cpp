@@ -82,7 +82,6 @@ public:
             {
                 ans = min(ans, cnt - total[i]);    
             }
-            cout << endl;
             return ans;
         };
         vector<int> res;
