@@ -1,29 +1,21 @@
 class Solution {
 public:
-    int dp[1001];
-    vector<vector<int>> books;
-    int width;
-    int dfs(int index)
-    {
-        if(index == books.size()) return 0;
-        int& res = dp[index];
-        if(res != -1) return res;
-        res = INT_MAX;
-        int maxHeight = 0, currWidth = width;
-        for(int i = index; i < books.size(); i++)
-        {
-            maxHeight = max(maxHeight, books[i][1]);
-            currWidth -= books[i][0];
-            if(currWidth < 0) break;
-            res = min(res, maxHeight + dfs(i + 1));
-        }
-        return res;
-    }
     int minHeightShelves(vector<vector<int>>& books, int shelfWidth) {
-        memset(dp, -1, sizeof(dp));
-        this->books = books;
-        this->width = shelfWidth;
-        return dfs(0);
-        
+        int n = books.size();
+        int dp[n + 1];
+        fill(dp, dp + n + 1, 1e8);
+        dp[n] = 0;
+        for(int i = n - 1; i >= 0; i--)
+        {
+            int currWidth = shelfWidth, maxHeight = 0;
+            for(int j = i; j < n; j++)
+            {
+                currWidth -= books[j][0];
+                maxHeight = max(maxHeight, books[j][1]);
+                if(currWidth < 0) break;
+                dp[i] = min(dp[i], maxHeight + dp[j + 1]);
+            }
+        }
+        return dp[0]; 
     }
 };
