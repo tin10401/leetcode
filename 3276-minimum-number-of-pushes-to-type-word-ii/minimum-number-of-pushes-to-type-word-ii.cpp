@@ -26,7 +26,7 @@ typedef tree<pair<int, int>, null_type, less<pair<int, int>>, rb_tree_tag, tree_
 #define ub upper_bound
 #define lb lower_bound
 #define db double
-#define ll unsigned long long
+#define ll long long
 #define vi vector<int>
 #define pii pair<int, int>
 #define vpii vector<pair<int, int>>
@@ -77,17 +77,12 @@ struct custom {
 class Solution {
 public:
     int minimumPushes(string word) {
-        vector<int> vis(26, 0);
-        for(auto& ch : word)
-        {
-            vis[ch - 'a']++;
-        }
-        sort(vis.rbegin(), vis.rend());
+        vi vis(26, 0);
+        for(auto& ch : word) vis[ch - 'a']++;
+        srtR(vis);
         int res = 0;
-        for(int i = 0; i < 26; i++)
-        {
-            res += vis[i] * ((i / 8) + 1);
-        }
+        for(int i = 0; i < 26; i++) res += vis[i] * ((i / 8) + 1);
         return res;
+        
     }
 };
