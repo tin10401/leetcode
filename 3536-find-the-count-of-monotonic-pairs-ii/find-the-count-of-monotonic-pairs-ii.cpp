@@ -21,9 +21,8 @@ public:
                 }
                 next_prefix[j + 1] = (next_prefix[j] + next_dp[j]) % MOD;
             }
-
-            dp = next_dp;
-            prefix = next_prefix;
+            swap(dp, next_dp);
+            swap(prefix, next_prefix);
         }
 
         int res = 0;
