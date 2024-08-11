@@ -15,8 +15,9 @@ public:
             for (ll j = 0; j <= nums[i]; ++j) {
                 ll a = nums[i] - j;
                 if (a <= nums[i - 1]) {
+                    int id = min(j, nums[i - 1] - (nums[i] - j)) + 1;
                     int query_index = min(j, nums[i - 1] - a) + 1;
-                    next_dp[j] = prefix[query_index] % MOD;
+                    next_dp[j] = prefix[id] % MOD;
                 }
                 next_prefix[j + 1] = (next_prefix[j] + next_dp[j]) % MOD;
             }
