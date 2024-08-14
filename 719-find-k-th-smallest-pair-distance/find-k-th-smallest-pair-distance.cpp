@@ -1,30 +1,25 @@
 class Solution {
 public:
     int smallestDistancePair(vector<int>& nums, int k) {
-        sort(nums.begin(), nums.end());
         int n = nums.size();
-        int left = 0, right = nums.back() - nums.front();
-
-        auto countPairs = [&](int mid) -> int {
-            int count = 0;
-            int j = 0;
-            for (int i = 0; i < n; i++) {
-                while (j < n && nums[j] - nums[i] <= mid) {
-                    j++;
-                }
-                count += (j - i - 1);
+        sort(begin(nums), end(nums));
+        auto compute = [&](int m)
+        {
+            int total = 0;
+            for(int i = 0, j = 0; i < n && total < k; i++)
+            {
+                while(j < n && nums[j] - nums[i] <= m) j++;
+                total += j - i - 1;
             }
-            return count;
+            return total >= k;
         };
-
-        while (left < right) {
-            int mid = left + (right - left) / 2;
-            if (countPairs(mid) < k) {
-                left = mid + 1;
-            } else {
-                right = mid;
-            }
+        int left = 0, right = nums.back() - nums.front(), res = 0;
+        while(left <= right)
+        {
+            int middle = left + (right - left) / 2;
+            if(compute(middle)) res = middle, right = middle - 1;
+            else left = middle + 1;
         }
-        return left;
+        return res;
     }
 };
