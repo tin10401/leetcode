@@ -13,7 +13,8 @@ public:
             }
             return total >= k;
         };
-        int left = 0, right = nums.back() - nums.front(), res = 0;
+        const int INF = INT_MAX;
+        int left = 0, right = INF, res = 0;
         while(left <= right)
         {
             int middle = left + (right - left) / 2;
