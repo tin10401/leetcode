@@ -2,7 +2,6 @@ class Solution {
 public:
     int countPairs(vector<int>& nums) {
         int n = nums.size();
-        int cnt[n][10];
         auto isValid = [&](int a, int b) -> bool
         {
             int c = 0;
@@ -22,16 +21,6 @@ public:
             sort(a1.begin(), a1.end()), sort(a2.begin(), a2.end());
             return a1 == a2;
         };
-        memset(cnt, 0, sizeof(cnt));
-        for(int i = 0; i < n; i++)
-        {
-            int num = nums[i];
-            while(num)
-            {
-                cnt[i][num % 10]++;
-                num /= 10;
-            }
-        } 
         int res = 0;
         for(int i = 0; i < n; i++)
         {
