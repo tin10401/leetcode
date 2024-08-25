@@ -20,15 +20,15 @@ public:
         set<pll> s;
         int MOD = 1e9 + 7, n = nums.size();
         for(int i = 0; i < n; i++) s.insert({(ll)nums[i], (ll)i});
-        while(s.begin()->ff * multiplier <= s.rbegin()->ff && k)
+        while(s.begin()->ff * multiplier <= s.rbegin()->ff && k) // bring the number in the set as close as possible together
         {
             k--;
             pll tmp = *s.begin();
             s.erase(tmp);
             s.insert({(tmp.ff * multiplier), tmp.ss});
         }
-        int take = k / n;
-        k %= n;
+        int take = k / n; // evenly divided
+        k %= n; // leftOver
         for(auto& [a, f] : s)
         {
             ll b = (a * modExpo(multiplier, take, MOD) % MOD * (k-- > 0 ? multiplier : 1)) % MOD;
