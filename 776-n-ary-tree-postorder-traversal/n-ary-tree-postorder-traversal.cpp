@@ -25,17 +25,23 @@ public:
         vector<int> res;
         stack<Node*> s;
         s.push(root);
+        unordered_set<Node*> vis;
         while(!s.empty())
         {
             auto node = s.top();
-            bool ok = false;
+            if(vis.count(node) || node->children.empty())
+            {
+                res.push_back(node->val);
+                node->val = INT_MIN;
+                s.pop();
+                continue;
+            }
+            vis.insert(node);
             int n = node->children.size();
             for(int i = n - 1; i >= 0; i--)
             {
-                auto nei = node->children[i];
-                if(nei->val != INT_MIN) {ok = true, s.push(nei);}
+                s.push(node->children[i]);
             }
-            if(!ok) {res.push_back(node->val); node->val = INT_MIN; s.pop();}
         }
         return res;
     }
