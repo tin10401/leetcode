@@ -32,7 +32,6 @@ public:
             if(vis.count(node) || node->children.empty())
             {
                 res.push_back(node->val);
-                node->val = INT_MIN;
                 s.pop();
                 continue;
             }
