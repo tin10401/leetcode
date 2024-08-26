@@ -1,48 +1,45 @@
 class Solution {
-public:
-    int countPairs(vector<int>& nums) {
-        unordered_map<int,int> m;
-        int ans = 0;
-        sort(nums.begin(), nums.end());
-        for (auto num : nums) {
-            // count all almost equal nums
-            string s = to_string(num);
-            int n = s.size();
-            ans += m[num];
-            unordered_set<int> vis;
-            for (int i = 0; i < n; i++) {
-                for (int j = i+1; j < n; j++) {
-                    if (s[i] == s[j]) continue;
-                    swap(s[i], s[j]);
-                    int curr = stoi(s);
-                    if (!vis.count(curr)) {
-                        ans += m[curr];
-                        vis.insert(curr);
-                        //if (m[curr] > 0) 
-                            //cout << "1 swap  - num: " << num << " ct: " << stoi(s) << '\n';
-                    }
-                    for (int k = 0; k < n; k++) {
-                        for (int l = k+1; l < n; l++) {
-                            if (i == k && j == l) continue;
-                            if (s[k] == s[l]) continue;
-                            swap(s[k], s[l]);
-                            int curry = stoi(s);
-                            if (!vis.count(curry)) {
-                                ans += m[curry];
-                                vis.insert(curry);
-                                //if (m[curry] > 0)
-                                    //cout << "2 swaps - num: " << num << " ct: " << stoi(s) << '\n';
-                            }
-                            
-                            swap(s[k], s[l]);
-                        
-                        }
-                    }
-                    swap(s[i], s[j]);
-                }
+    unordered_map<int, int> cnt;
+    void add(unordered_set<int> &st, vector<int> &cur, vector<int> &f, int v, int c){
+        st.insert(v);
+        if(c == 2)  return;
+        int m = cur.size();
+        for(int i=0; i<m; ++i){
+            for(int j=i+1; j<m; ++j){
+                int w = v + cur[i] * (f[j] - f[i]) + cur[j] * (f[i] - f[j]);
+                swap(cur[i], cur[j]);
+                add(st, cur, f, w, c + 1);
+                swap(cur[i], cur[j]);
             }
-            m[num]++;
         }
-        return ans;
+    }
+    void add(int y){
+        int v = y;
+        vector<int> cur;
+        vector<int> f;
+        int p = 1;
+        while(y){
+            cur.push_back(y % 10);
+            y /= 10;
+            f.push_back(p);
+            p = p * 10;
+        }
+        reverse(cur.begin(), cur.end());
+        reverse(f.begin(), f.end());
+        unordered_set<int> st;
+        add(st, cur, f, v, 0);
+        for(int v : st){
+            ++cnt[v];
+        }
+    }
+public:
+    int countPairs(vector<int>& a) {
+        int ret = 0;
+        sort(a.rbegin(), a.rend());
+        for(int v : a){
+            ret += cnt[v];
+            add(v);
+        }
+        return ret;
     }
 };
