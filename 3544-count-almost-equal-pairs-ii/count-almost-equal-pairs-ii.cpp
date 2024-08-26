@@ -1,45 +1,52 @@
 class Solution {
-    unordered_map<int, int> cnt;
-    void add(unordered_set<int> &st, vector<int> &cur, vector<int> &f, int v, int c){
-        st.insert(v);
-        if(c == 2)  return;
-        int m = cur.size();
-        for(int i=0; i<m; ++i){
-            for(int j=i+1; j<m; ++j){
-                int w = v + cur[i] * (f[j] - f[i]) + cur[j] * (f[i] - f[j]);
-                swap(cur[i], cur[j]);
-                add(st, cur, f, w, c + 1);
-                swap(cur[i], cur[j]);
+    string makeDigit(int num, int digits) {
+        string s = to_string(num);
+        int n = s.size();
+        for(int i=0;i<digits-n;i++)
+            s = "0" + s;
+        return s;
+    }
+
+    unordered_set<string> makeSwapChanges(int num, int digits) {
+        string s = makeDigit(num, digits);
+        unordered_set<string> poss;
+        poss.insert(s);
+        
+        for(int i = 0; i < digits; ++i) {
+            for(int j = i + 1; j < digits; ++j) {
+                swap(s[i], s[j]);
+                poss.insert(s);
+                for(int i1 = 0; i1 < digits; ++i1) {
+                    for(int j1 = i1+1; j1 < digits; ++j1) {
+                        if(s[i1] != s[j1]) {
+                            swap(s[i1], s[j1]);
+                            poss.insert(s);
+                            swap(s[j1], s[i1]);
+                        }
+                    }
+                }
+                swap(s[i], s[j]);
             }
         }
+        return poss;
     }
-    void add(int y){
-        int v = y;
-        vector<int> cur;
-        vector<int> f;
-        int p = 1;
-        while(y){
-            cur.push_back(y % 10);
-            y /= 10;
-            f.push_back(p);
-            p = p * 10;
-        }
-        reverse(cur.begin(), cur.end());
-        reverse(f.begin(), f.end());
-        unordered_set<int> st;
-        add(st, cur, f, v, 0);
-        for(int v : st){
-            ++cnt[v];
-        }
-    }
+
 public:
-    int countPairs(vector<int>& a) {
-        int ret = 0;
-        sort(a.rbegin(), a.rend());
-        for(int v : a){
-            ret += cnt[v];
-            add(v);
+    int countPairs(vector<int>& nums) {
+        int n = nums.size();
+        int digits = to_string(*max_element(nums.begin(),nums.end())).size();
+
+        unordered_map<string, int> mp;
+        int ans = 0;
+        for(int i = 0; i < n; ++i) {
+            for(const auto& s : makeSwapChanges(nums[i], digits)) {
+                if(mp.count(s)) {
+                    ans += mp[s];
+                }
+            }
+            mp[makeDigit(nums[i], digits)]++;
         }
-        return ret;
+
+        return ans;
     }
 };
