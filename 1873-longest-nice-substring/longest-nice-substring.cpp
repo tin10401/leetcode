@@ -1,8 +1,8 @@
 class Solution {
 public:
     string longestNiceSubstring(string s) {
-        int n = s.size(), len = 0, start = -1;
-        for(int unique = 1; unique < 26; unique++)
+        int n = s.size(), len = 0, start = -1, range = unordered_set<char>(begin(s), end(s)).size();
+        for(int unique = 1; unique <= range; unique++)
         {
             int total[26] = {}, upper[26] = {}, lower[26] = {}, countLower = 0, countUpper = 0, uniqueCount = 0;
             for(int right = 0, left = 0; right < n; right++)
