@@ -18,7 +18,7 @@ public:
     vector<int> getFinalState(vector<int>& nums, int k, int multiplier) {
         if(multiplier == 1) return nums;
         set<pll> s;
-        int MOD = 1e9 + 7, n = nums.size();
+        int MOD = 1e9 + 7, n = nums.size(), mx = *max_element(begin(nums), end(nums));
         for(int i = 0; i < n; i++) s.insert({(ll)nums[i], (ll)i});
         while(s.begin()->ff * multiplier <= s.rbegin()->ff && k) // bring the number in the set as close as possible together
         {
@@ -27,11 +27,11 @@ public:
             s.erase(tmp);
             s.insert({(tmp.ff * multiplier), tmp.ss});
         }
-        int take = k / n; // evenly divided
+        int take = modExpo(multiplier, k / n, MOD);
         k %= n; // leftOver
         for(auto& [a, f] : s)
         {
-            ll b = (a * modExpo(multiplier, take, MOD) % MOD * (k-- > 0 ? multiplier : 1)) % MOD;
+            ll b = (a * take % MOD * (k-- > 0 ? multiplier : 1)) % MOD;
             nums[f] = b;
         }
         return nums;
