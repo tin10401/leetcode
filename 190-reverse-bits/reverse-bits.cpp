@@ -4,8 +4,7 @@ public:
         int res = 0;
         for(int i = 0; i < 32; i++)
         {
-            long long bits = (n >> i) & 1;
-            res |= (bits << (32 - i - 1));
+            res |= ((n >> i)  & 1) << (32 - i - 1);
         }
         return res;
     }
