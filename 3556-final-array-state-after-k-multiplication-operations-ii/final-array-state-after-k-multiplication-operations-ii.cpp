@@ -25,7 +25,8 @@ public:
             k--;
             pll tmp = *s.begin();
             s.erase(tmp);
-            s.insert({(tmp.ff * multiplier), tmp.ss});
+            tmp.ff *= multiplier;
+            s.insert(tmp);
         }
         int take = modExpo(multiplier, k / n, MOD);
         k %= n; // leftOver
