@@ -2,7 +2,7 @@ class Solution {
 public:
     vector<int> shortestDistanceAfterQueries(int n, vector<vector<int>>& queries) {
         set<int> arr;
-        for (int i = 0; i < n - 1; ++i) {
+        for (int i = 0; i < n; ++i) {
             arr.insert(i);
         }
         
@@ -17,7 +17,7 @@ public:
             auto it2 = arr.upper_bound(j - 1);
             
             arr.erase(it1, it2);
-            result.push_back(arr.size());
+            result.push_back(arr.size() - 1);
         }
         return result;
     }
