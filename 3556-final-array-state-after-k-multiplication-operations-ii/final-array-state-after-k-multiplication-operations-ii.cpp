@@ -20,7 +20,7 @@ public:
         set<pll> s;
         int MOD = 1e9 + 7, n = nums.size(), mx = *max_element(begin(nums), end(nums));
         for(int i = 0; i < n; i++) s.insert({(ll)nums[i], (ll)i});
-        while(s.begin()->ff * multiplier <= s.rbegin()->ff && k) // bring the number in the set as close as possible together
+        while(s.begin()->ff * multiplier <= mx && k) // bring the number in the set as close as possible together
         {
             k--;
             pll tmp = *s.begin();
