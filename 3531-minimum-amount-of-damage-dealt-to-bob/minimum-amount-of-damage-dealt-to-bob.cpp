@@ -138,7 +138,6 @@ void generatePrime() {  primeBits.set(2);
 class Solution {
 public:
     ll minDamage(int power, vector<int>& damage, vector<int>& health) {
-        IOS;
         ll total = sum(damage);
         auto cmp = [&](const pii& a, const pii& b) {
             auto &[d1, h1] = a;
@@ -149,17 +148,14 @@ public:
             return (db)d1 / diff1 > (db)d2 / diff2;
         };
         vpii arr;
-        pq<pii, vpii, decltype(cmp)> minHeap(cmp);
         int n = damage.size();
         for(int i = 0; i < n; i++) {
-            minHeap.push(MP(damage[i], health[i]));
             arr.pb(MP(damage[i], health[i]));
         }
         sort(all(arr), cmp);
         ll res = 0;
         for(auto& [d, h] : arr) {
             int take = (h + power - 1) / power;
-            cout << d << " " << h << " " << take << endl;
             res += take * total;
             total -= d;
         }
