@@ -138,6 +138,7 @@ void generatePrime() {  primeBits.set(2);
 class Solution {
 public:
     double maxProbability(int n, vector<vector<int>>& edges, vector<double>& succProb, int start_node, int end_node) {
+        IOS;
         vector<vector<pair<double, int>>> graph(n);
         for(int i = 0; i < edges.size(); i++)
         {
