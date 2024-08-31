@@ -138,7 +138,6 @@ void generatePrime() {  primeBits.set(2);
 class Solution {
 public:
     ll minDamage(int power, vector<int>& damage, vector<int>& health) {
-        ll total = sum(damage);
         auto cmp = [&](const pii& a, const pii& b) {
             auto &[d1, h1] = a;
             auto &[d2, h2] = b;
@@ -153,7 +152,7 @@ public:
             arr.pb(MP(damage[i], health[i]));
         }
         sort(all(arr), cmp);
-        ll res = 0;
+        ll res = 0, total = sum(damage);
         for(auto& [d, h] : arr) {
             int take = (h + power - 1) / power;
             res += take * total;
