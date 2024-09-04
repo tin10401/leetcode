@@ -116,9 +116,9 @@ class Solution {
 public:
     int maxSubstringLength(string s) {
         IOS;
-        int n = s.size(), res = -1, c[26] = {};
-        for(auto& ch : s) c[ch - 'a']++;
-        for(int unique = 1; unique < 26; unique++) {
+        int n = s.size(), res = -1, c[26] = {}, range = 0;
+        for(auto& ch : s) c[ch - 'a']++, range += c[ch - 'a'] == 1;
+        for(int unique = 1; unique <= range; unique++) {
             int cnt[26] = {}, count = 0, equal = 0;
             for(int i = 0, left = 0; i < n; i++) {
                 count += ++cnt[s[i] - 'a'] == 1;
