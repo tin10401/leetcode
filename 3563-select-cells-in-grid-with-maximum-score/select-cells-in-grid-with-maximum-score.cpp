@@ -1,27 +1,36 @@
-int dp[1 << 11][12][12];
+pair<int, int> dp[1 << 10];  // Store the maximum score and the smallest value used
 class Solution {
 public:
     int maxScore(vector<vector<int>>& grid) {
         int n = grid.size(), m = grid[0].size();
-        for(int i = 0; i < n; i++) {
-            sort(rbegin(grid[i]), rend(grid[i]));
+        for (int i = 0; i < n; i++) {
+            sort(rbegin(grid[i]), rend(grid[i]));  // Sort each row in descending order
         } 
-        memset(dp, -1, sizeof(dp)); 
-        auto dfs = [&](auto& dfs, int mask = 0, int row = 11, int col = 11) -> int {
-            int& best = dp[mask][row][col];
-            if(best != -1) return best;
-            best = 0;
-            for(int i = 0; i < n; i++) {
-                if((mask >> i) & 1) continue;
-                for(int j = 0; j < m; j++) {
-                    if(row == 11 || grid[i][j] < grid[row][col]) {
-                        best = max(best, grid[i][j] + dfs(dfs, mask | (1 << i), i, j));
-                        break;
+        int res = 0;
+        dp[0] = {0, 101};  // Initialize with empty set
+
+        for (int mask = 1; mask < (1 << n); mask++) {
+            auto& curr = dp[mask];
+            curr = {0, 0};  // Initialize the current dp state
+            set<int> used_values;  // Track the used values for uniqueness
+
+            for (int i = 0; i < n; i++) {
+                if ((mask >> i) & 1) {  // If the ith row is included in the subset
+                    auto [sm, w] = dp[mask ^ (1 << i)];
+                    for (int j = 0; j < m; j++) {
+                        if (grid[i][j] < w && used_values.find(grid[i][j]) == used_values.end()) {
+                            // If the value is smaller than the previous one and hasn't been used
+                            sm += grid[i][j];
+                            used_values.insert(grid[i][j]);  // Mark as used
+                            w = grid[i][j];
+                            break;     
+                        } 
                     }
+                    curr = max(curr, make_pair(sm, w));  // Update the current dp state
                 }
-            }   
-            return best;
-        };
-        return dfs(dfs);
+            } 
+            res = max(res, curr.first);  // Track the maximum score
+        }
+        return res;
     }
 };
