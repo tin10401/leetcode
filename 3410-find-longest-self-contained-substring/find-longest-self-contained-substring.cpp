@@ -115,22 +115,8 @@ template <class K, class V> using umap = std::unordered_map<K, V, custom>; templ
 class Solution {
 public:
     int maxSubstringLength(string s) {
-        int n = s.size(), res = -1;
-        vvi dp(n + 1, vi(26));
-        int c[26] = {};
+        int n = s.size(), res = -1, c[26] = {};
         for(auto& ch : s) c[ch - 'a']++;
-        for(int i = 1; i <= n; i++) {
-            dp[i] = dp[i - 1];
-            dp[i][s[i - 1] - 'a']++;
-        }
-        auto check = [&](int left, int right) -> bool {
-            if(left == 0 && right == n - 1) return false;
-            for(int i = 0; i < 26; i++) {
-                int curr = dp[right + 1][i] - dp[left][i];
-                if(curr && dp[n][i] != curr) return false;
-            }
-            return true;
-        };
         for(int unique = 1; unique < 26; unique++) {
             int cnt[26] = {}, count = 0;
             for(int i = 0, left = 0; i < n; i++) {
