@@ -117,6 +117,8 @@ public:
     int maxSubstringLength(string s) {
         int n = s.size(), res = -1;
         vvi dp(n + 1, vi(26));
+        int c[26] = {};
+        for(auto& ch : s) c[ch - 'a']++;
         for(int i = 1; i <= n; i++) {
             dp[i] = dp[i - 1];
             dp[i][s[i - 1] - 'a']++;
@@ -136,8 +138,12 @@ public:
                 while(count > unique) {
                     count -= --cnt[s[left++] - 'a'] == 0;
                 }
-                if(count == unique && check(left, i)) {
-                    res = max(res, i - left + 1); 
+                if(count == unique && !(left == 0 && i == n - 1)) {
+                    bool ok = true;
+                    for(int j = 0; j < 26; j++) {
+                        if(cnt[j] && cnt[j] != c[j]) {ok = false; break;}
+                    }
+                    if(ok) res = max(res, i - left + 1);
                 }
             }
         }
