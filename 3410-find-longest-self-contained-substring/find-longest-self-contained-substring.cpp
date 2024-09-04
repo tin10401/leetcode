@@ -115,21 +115,21 @@ template <class K, class V> using umap = std::unordered_map<K, V, custom>; templ
 class Solution {
 public:
     int maxSubstringLength(string s) {
+        IOS;
         int n = s.size(), res = -1, c[26] = {};
         for(auto& ch : s) c[ch - 'a']++;
         for(int unique = 1; unique < 26; unique++) {
-            int cnt[26] = {}, count = 0;
+            int cnt[26] = {}, count = 0, equal = 0;
             for(int i = 0, left = 0; i < n; i++) {
                 count += ++cnt[s[i] - 'a'] == 1;
+                equal += cnt[s[i] - 'a'] == c[s[i] - 'a'];
                 while(count > unique) {
-                    count -= --cnt[s[left++] - 'a'] == 0;
+                    count -= --cnt[s[left] - 'a'] == 0;
+                    equal -= cnt[s[left] - 'a'] == c[s[left] - 'a'] - 1;
+                    left++;
                 }
-                if(count == unique && !(left == 0 && i == n - 1)) {
-                    bool ok = true;
-                    for(int j = 0; j < 26; j++) {
-                        if(cnt[j] && cnt[j] != c[j]) {ok = false; break;}
-                    }
-                    if(ok) res = max(res, i - left + 1);
+                if(count == unique && i - left + 1 != n && equal == count) {
+                    res = max(res, i - left + 1);
                 }
             }
         }
